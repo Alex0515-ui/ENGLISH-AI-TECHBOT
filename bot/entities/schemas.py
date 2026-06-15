@@ -2,7 +2,7 @@ from pydantic import BaseModel
 from typing import Optional
 
 
-# Валидация для создания пользователя
+# Create user validation
 class UserCreateSchema(BaseModel):
     first_name: str
     telegram_id: int

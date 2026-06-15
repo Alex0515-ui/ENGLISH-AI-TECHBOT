@@ -11,9 +11,10 @@ from telegram import send_message
 from db.database import Base, engine
 
 
-# Жизненный цикл бота (Выполняется при старте и выключении сервера)
 @asynccontextmanager 
 async def lifespan(app: FastAPI):
+    """Bot lifecycle (Runs when the server starts and shuts down)"""
+
     Base.metadata.create_all(bind=engine)
     webhook_url = settings.get_webhook()
     async with httpx.AsyncClient() as client:
@@ -27,22 +28,23 @@ async def lifespan(app: FastAPI):
 app = FastAPI(lifespan=lifespan)
 
 
-# ОСНОВНОЙ ЭНДПОИНТ ДЛЯ ПРИЕМА СООБЩЕНИЙ В ТГ
 @app.post("/webhook")
 async def webhook(req: Request, db: Session = Depends(get_db)):
+    """MAIN ENDPOINT FOR RECEIVING MESSAGES IN TG"""
+
     try:
         data = await req.json()
 
-        if "callback_query" in data: # Если пользователь нажал кнопку, выполняем действие
+        if "callback_query" in data: # If the user clicked the button, perform the action
             response = await handle_callback(callback=data["callback_query"], db=db)
 
             if response:
                 await send_message(chat_id=response["chat_id"], text=response["text"], reply_markup=response.get("keyboard"))
                 
-            return {"ok": True} # Завершаем обработку если была выборка
+            return {"ok": True} # We complete processing if there was a selection
 
 
-        # Дальше уже если обычное сообщение
+        # Regular messages
         message = data.get("message", {})
         from_info = message.get("from")
         
@@ -52,7 +54,7 @@ async def webhook(req: Request, db: Session = Depends(get_db)):
         user = await handle_create_user(user=from_info, db=db)
         await handle_message(user=user, text=message["text"], db=db)
 
-        # Реакция на команду /start
+        # Response to the "/start" command
         if message["text"] == "/start":
             await handle_start(user=user, db=db)
 

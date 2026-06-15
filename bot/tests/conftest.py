@@ -3,10 +3,11 @@ import pytest
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
 
-# Создаем фейковую БД для ТЕСТОВ
+
 @pytest.fixture
 def db():
-
+    """Fake DB for tests"""
+    
     url = "sqlite:///:memory:"
     engine = create_engine(url)
 

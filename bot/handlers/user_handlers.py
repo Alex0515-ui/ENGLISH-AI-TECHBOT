@@ -10,8 +10,10 @@ from handlers.word_repeat_handlers import *
 from handlers.dialogue_handlers import *
 from handlers.practise_handlers import *
 
-# Обработчик создания пользователя
+
 async def handle_create_user(user, db: Session):
+    """Handler for creating user"""
+
     user_data = UserCreateSchema(
         username=user.get("username"),
         telegram_id=user.get("id"),
@@ -22,9 +24,8 @@ async def handle_create_user(user, db: Session):
     return user
 
 
-# Обработчик начала работы бота /start
 async def handle_start(user: User, db: Session): 
-    
+    """When user clicks on '/start' """
     if user.is_registered:
             await send_message(chat_id=user.telegram_id, text=f"С возвращением {user.first_name}!")
             await send_message(chat_id=user.telegram_id, text="Главное меню:", reply_markup=Menu_keyboard)
@@ -40,8 +41,9 @@ async def handle_start(user: User, db: Session):
             reply_markup=Level_keyboard     
         )
 
-# Обработчик начала обучения
+
 async def start_learning(tg_id: int, db: Session):
+    "Handler that starts learning"
     user = db.query(User).filter(User.telegram_id==tg_id).first()
 
     session = await get_session(user.telegram_id)
@@ -60,8 +62,9 @@ async def start_learning(tg_id: int, db: Session):
     
     
 
-# Главный обработчик действий
 async def handle_callback(callback, db: Session):
+    """Main action handler"""
+
     action = callback["data"]
     tg_id = callback["from"]["id"]
 
@@ -99,8 +102,9 @@ async def handle_callback(callback, db: Session):
         return await No_practise(callback=callback, tg_id=tg_id)
     
 
-# Обработчик установки уровня пользователя
 async def handle_set_level(callback, db: Session):
+    """Sets user eng level"""
+
     tg_id = callback["from"]["id"]
     level = callback["data"].replace("set_lvl_", "")
 
@@ -113,8 +117,9 @@ async def handle_set_level(callback, db: Session):
     }
 
 
-# Обработчик установки режима
 async def handle_set_mode(callback, db: Session):
+    """Sets user's eng mode"""
+    
     tg_id = callback["from"]["id"]
     mode = callback["data"].replace("set_mode_", "")
 

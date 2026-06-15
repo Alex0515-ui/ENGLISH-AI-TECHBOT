@@ -2,11 +2,12 @@ from services.user_service import UserService
 from entities.models import *
 from entities.schemas import UserCreateSchema
 
-# ===== CREATE_USER тесты  ====================
+# ===== CREATE_USER TESTS ====================
 
 
-# Успешное создание пользователя
 def test_create_user_new(db):
+    """Create user success"""
+
     data = UserCreateSchema(
         username="test1",
         telegram_id=123,
@@ -20,8 +21,10 @@ def test_create_user_new(db):
     assert user.first_name == "Test"
 
 
-# Тут проверяем на дубликат, чтобы юзер дважды не создался
+
 def test_create_user_existing(db):
+    """User duplicate check to prevent double creation"""
+
     existing = User(telegram_id=123, first_name="Test")
     db.add(existing)
     db.commit()
@@ -37,10 +40,11 @@ def test_create_user_existing(db):
     assert user.id == existing.id
 
 
-# ========= GET_DAILY_WORDS тесты =====
+# ========= GET_DAILY_WORDS TESTS =====
 
-# Получение слов для изучения 
 def test_get_daily_words_returns_words(db):
+    """Fetch words for learning"""
+
     user = User(
         telegram_id=123,
         first_name="Test",
@@ -67,8 +71,9 @@ def test_get_daily_words_returns_words(db):
     assert result[0]["word"] == "run"
 
 
-# Проверка что изученные слова не дают 
 def test_get_daily_words_excludes_learned(db):
+    """Ensure learned words are not returned"""
+
     user = User(
         telegram_id=123,
         first_name="Alih",
@@ -101,8 +106,8 @@ def test_get_daily_words_excludes_learned(db):
     assert result == []
 
 
-# Если юзера нету, ничего не будет
 def test_get_daily_words_no_user(db):
+    """Do nothing if user does not exist"""
     result = UserService.get_daily_words(db=db, tg_id=999, word_count=5)
 
     assert result is None

@@ -9,9 +9,10 @@ from datetime import datetime, timedelta, timezone, date
 
 # ============ CHECK_DAILY_LIMIT тесты  =====================
 
-# Проверяю что лимит еще есть
 @pytest.mark.asyncio
 async def test_check_daily_limit(mocker, db):
+    """Check if limit remains"""
+
     user = User(first_name="Alex", telegram_id=123)
     db.add(user)
     db.commit()
@@ -26,9 +27,9 @@ async def test_check_daily_limit(mocker, db):
     assert result is False
 
 
-# Проверка что лимит исчерпан
 @pytest.mark.asyncio
 async def test_check_daily_limit_true(mocker):
+    """Check if limit exceeded"""
     
     today = str(date.today())
 
@@ -46,7 +47,6 @@ async def test_check_daily_limit_true(mocker):
 # ============ HANDLE_CALLBACK тесты =====================
 
 
-# Проверяем что все функции правильно вызываются
 @pytest.mark.asyncio
 @pytest.mark.parametrize(
     "action, expected_call", 
@@ -65,6 +65,8 @@ async def test_check_daily_limit_true(mocker):
     ]
 )
 async def test_handle_callback_success(mocker, db, action, expected_call):
+    """Verify all functions are called correctly"""
+
     tg_id = 123
     callback = {
         "from": {"id":tg_id},
@@ -95,9 +97,10 @@ async def test_handle_callback_success(mocker, db, action, expected_call):
 # ============ HANDLE_ANSWER тесты (там куча строк) =============
 
 
-# Правильный ответ при обучении
 @pytest.mark.asyncio
 async def test_handle_answer_success(mocker, db):
+    """Correct answer during learning"""
+
     tg_id = 123
 
     session_data = {
@@ -145,9 +148,10 @@ async def test_handle_answer_success(mocker, db):
     mock_send_message.assert_any_call(chat_id=tg_id, text="Поздравляю, ты прошел все слова!")
 
 
-# Правильный ответ при повторении
 @pytest.mark.asyncio
 async def test_handle_answer_repeat_success(mocker, db):
+    """Correct answer during review"""
+
     now = datetime.now(timezone.utc)
 
     user = User(first_name="Test", telegram_id=123)
@@ -241,9 +245,10 @@ async def test_handle_answer_repeat_success(mocker, db):
     mock_practise_question.assert_not_called()
 
 
-# Неправильный ответ при обучении
 @pytest.mark.asyncio
 async def test_handle_answer_incorrect(mocker, db):
+    """Incorrect answer during learning"""
+
     tg_id = 123
 
     session_data = {
@@ -291,9 +296,10 @@ async def test_handle_answer_incorrect(mocker, db):
     mock_send_message.assert_any_call(chat_id=tg_id, text="Поздравляю, ты прошел все слова!")
 
 
-# Проверка правильного ответа при повторении
 @pytest.mark.asyncio
 async def test_handle_answer_repeat_success(mocker, db):
+    """Verify correct answer during review"""
+    
     now = datetime.now(timezone.utc)
 
     user = User(first_name="Test", telegram_id=123)

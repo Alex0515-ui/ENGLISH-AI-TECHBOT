@@ -16,8 +16,9 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-# Функция проверки дневного лимита слов
 async def check_daily_limit(tg_id: int):
+    """Checks daily limit of learning words"""
+
     daily = await get_daily(tg_id=tg_id)
     today = str(date.today())
     if daily and daily.get("last_date") == today:
@@ -27,8 +28,9 @@ async def check_daily_limit(tg_id: int):
     return False
 
 
-# Отправка следующего слова
 async def send_next_word(tg_id: int, db: Session):
+    """Sending next word to user"""
+
     try:
         session = await get_session(tg_id=tg_id)
 
@@ -95,8 +97,9 @@ async def send_next_word(tg_id: int, db: Session):
         )
 
 
-# Обработчик количества слов
 async def handle_set_words(callback, db: Session):
+    """Words count handler"""
+
     tg_id = callback["from"]["id"]
     word_count = int(callback["data"].replace("set_word_count_", ""))
 
@@ -125,9 +128,9 @@ async def handle_set_words(callback, db: Session):
     return
 
 
-# Обработка ответа на слово
 async def handle_answer(callback, db: Session):
-
+    """Handles answer from user"""
+    
     try:
         tg_id = callback["from"]["id"]
         answer = callback["data"].replace("answer_", "")

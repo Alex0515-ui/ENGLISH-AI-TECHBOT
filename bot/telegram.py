@@ -1,8 +1,10 @@
 import httpx
 from db.config import settings
 
-# Отправка сообщения пользователю 
+
 async def send_message(chat_id: int, text: str, reply_markup: dict = None):
+    """Sending a message to the user"""
+
     url = f"https://api.telegram.org/bot{settings.BOT_TOKEN}/sendMessage"
     payload = {
         "chat_id": chat_id,
@@ -15,8 +17,10 @@ async def send_message(chat_id: int, text: str, reply_markup: dict = None):
         await client.post(url, json=payload)
 
 
-# Исчезнование кнопок после выбора
+
 async def edit_message_keyboard(chat_id:int, message_id: int, reply_markup: dict = None):
+    """Hide buttons after selection"""
+
     url = f"https://api.telegram.org/bot{settings.BOT_TOKEN}/editMessageReplyMarkup"
     payload = {
         "chat_id": chat_id,
@@ -29,8 +33,10 @@ async def edit_message_keyboard(chat_id:int, message_id: int, reply_markup: dict
         await client.post(url, json=payload)
 
 
-# Одноразовая функция, для удаления кнопок справа от поля ввода сообщения
+
 async def remove_reply_keyboard(chat_id: int):
+    """One-time function to remove input field buttons"""
+    
     url = f"https://api.telegram.org/bot{settings.BOT_TOKEN}/editMessageReplyMarkup"
 
     payload = {

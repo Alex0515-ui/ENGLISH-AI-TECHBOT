@@ -6,9 +6,9 @@ from AI.ai_prompts import GENERATION_SYSTEM_PROMPT, CHECK_SYSTEM_PROMPT
 
 client = Groq(api_key=settings.GROQ_API_KEY)
 
-# Генерация предложений
 async def generate_sentences(words: list[str]):
-
+    """Generating sentences for user to translate"""
+    
     prompt = "Words:\n" + "\n".join(words)
 
     completion = client.chat.completions.create(
@@ -31,8 +31,10 @@ async def generate_sentences(words: list[str]):
     except Exception:
         return None
 
-# Просто обертка для сообщения в ИИ
+
 def build_check_prompt(word: str, ru_sentences: list[str], user_answer: str):
+    """Just a wrapper for prompt"""
+
     ru_text = "\n".join([f"{i+1}. {s}" for i, s in enumerate(ru_sentences)])
 
     return f"""Target word: {word}
@@ -44,8 +46,9 @@ def build_check_prompt(word: str, ru_sentences: list[str], user_answer: str):
     {user_answer}
     """
 
-# Проверка корректности ответа пользователя
+
 async def check_translation(word: str, ru_sentences: list[str], user_answer: str):
+    """Checks user's response translation"""
 
     completion = client.chat.completions.create(
         model="openai/gpt-oss-120b",

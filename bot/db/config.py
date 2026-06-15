@@ -7,7 +7,7 @@ load_dotenv()
 
 redis_client = Redis.from_url("redis://redis:6379", decode_responses=True)
 
-# Для удобного получения секретных данных
+# For handy managing secret data in .env
 class Settings(BaseSettings):
     BOT_TOKEN: str
     WEB_URL: str

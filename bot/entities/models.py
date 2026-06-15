@@ -3,7 +3,7 @@ from sqlalchemy import Column, Integer,String, Enum as SQLEnum, BigInteger, func
 from enum import Enum
 from sqlalchemy.orm import relationship
 
-# Уровни владения англ языком
+# English skill levels
 class Levels(str, Enum):
     A1 = "A1"
     A2 = "A2"
@@ -14,12 +14,12 @@ class Levels(str, Enum):
     C1 = "C1"
     C2 = "C2"
 
-# Режимы англ: Обычный, Технический(Для работы)
+# Modes: General, TECH(For IT work)
 class Mode(str, Enum):
     GENERAL = "general"
     TECH = "tech"
 
-# Основная таблица пользователя
+# User model
 class User(Base):
     __tablename__ = "users"
 
@@ -38,7 +38,7 @@ class User(Base):
         return f"User: telegram_id:{self.telegram_id}, level: {self.level}"
 
 
-# Словарь слов
+# Words dict
 class Words(Base):
     __tablename__ = "words"
 
@@ -54,13 +54,13 @@ class Words(Base):
     def __repr__(self):
         return f"{self.word}, ({self.level}, {self.type})"
 
-# Статус слова
+# Word's status
 class Word_Status(Enum):
     NEW = "new"
     LEARNING = "learning"
     LEARNED = "learned"
 
-# Таблица слов в обучении каждого пользователя
+# Each user's learning words
 class User_words(Base):
     __tablename__ = "user_words"
 

@@ -12,14 +12,15 @@ MAX_HISTORY = 10
 
 client = Groq(api_key=settings.GROQ_API_KEY)
 
-# Отправка сообщение ИИ и получение ответа во время диалога
 async def send_chat_message(tg_id:int, user_text: str, db: Session):
+    """Sends message to AI and receives response"""
+
     user = db.query(User).filter(User.telegram_id == tg_id).first()
 
     if not user:
         return None
     
-    # Поведение ИИ
+    # AI behavior
     SYSTEM_PROMPT = f"""You're a friendly communication assistant.
 
     User English level: {user.level}
@@ -39,14 +40,14 @@ async def send_chat_message(tg_id:int, user_text: str, db: Session):
         await set_daily_dialogue(tg_id=tg_id, date=today)
         return await send_message(chat_id=user.telegram_id, text="Лимит диалога исчерпан, возвращайся завтра")
 
-    # Структурируем сообщение
+    # Structuring message
     messages = [
         {"role":"system", "content": SYSTEM_PROMPT},
         *history["messages"],
         {"role":"user", "content": user_text}
     ]
 
-    # Сам запрос В ИИ
+    # The request itself to AI
     completion = client.chat.completions.create(
         model="openai/gpt-oss-120b",
         messages=messages,
@@ -62,9 +63,8 @@ async def send_chat_message(tg_id:int, user_text: str, db: Session):
     for chunk in completion:
         content = chunk.choices[0].delta.content or ""
         response_text += content
-        print(content, end="")
 
-    # Сохраняем всю историю диалога
+    # Saving dialogue's history
     history["messages"].append({"role": "user", "content": user_text})
     history["messages"].append({"role": "assistant", "content": response_text})
 
@@ -73,7 +73,7 @@ async def send_chat_message(tg_id:int, user_text: str, db: Session):
 
     await save_chat_dialogue(tg_id=tg_id, history=history)
 
-    # Возвращаем ответ пользователю
+    # Returning response to user
     return await send_message(chat_id=tg_id, text=response_text)
 
     

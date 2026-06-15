@@ -3,10 +3,11 @@ from services.word_service import WordService
 from entities.models import User, User_words, Word_Status
 
 
-# ====================== SAVE_WORD_TO_DB тесты ===================
+# ====================== SAVE_WORD_TO_DB TESTS ===================
 
-# Успешное сохранение нового слова 
 def test_save_word_creates_new(db):
+    """Word saved successfully"""
+
     user = User(telegram_id=123, first_name="Almas")
     db.add(user)
     db.commit()
@@ -20,8 +21,9 @@ def test_save_word_creates_new(db):
     assert word.status == Word_Status.LEARNING
     assert word.next_review_date is not None
 
-# Проверка на дубликат, чтобы дважды в БД не сохранялось
 def test_save_word_duplicate(db):
+    """Duplicate check to prevent double saving"""
+
     user = User(telegram_id=123, first_name="Sasha")
     db.add(user)
     db.commit()
@@ -33,10 +35,11 @@ def test_save_word_duplicate(db):
     assert db.query(User_words).count() == 1
 
 
-# =============== PROCESS_ANSWER метод тесты ===================
+# =============== PROCESS_ANSWER TESTS ===================
 
-# Успешный прогресс пользователя
 def test_process_answer_correct_progress(db):
+    """User progress updated successfully"""
+
     user = User(telegram_id=123, first_name="Alehandro")
     db.add(user)
     db.commit()
@@ -56,8 +59,10 @@ def test_process_answer_correct_progress(db):
     assert word.status == Word_Status.LEARNING
     assert word.next_review_date is not None
 
-# Полное изучение слова
+
 def test_process_answer_learned(db):
+    """Word fully mastered"""
+
     user = User(telegram_id=123, first_name="Alexandra")
     db.add(user)
     db.commit()
@@ -76,8 +81,10 @@ def test_process_answer_learned(db):
     assert word.status == Word_Status.LEARNED
     assert word.next_review_date is None
 
-# Обнуление прогресса, если юзер ответил неправильно
+
 def test_process_answer_incorrect(db):
+    """Reset progress on incorrect answer"""
+
     user = User(telegram_id=123, first_name="Alex")
     db.add(user)
     db.commit()
@@ -98,11 +105,12 @@ def test_process_answer_incorrect(db):
     assert word.next_review_date is not None
 
 
-# ===== GET_WORDS_TO_REPEAT тесты ===================
+# ===== GET_WORDS_TO_REPEAT TESTS ===================
 
 
-# Проверяем что даты не слишком ранние для повторения
 def test_get_words_to_repeat_filters_by_date(db):
+    """Check if interval is too short for review"""
+
     user = User(telegram_id=123, first_name="Test")
     db.add(user)
     db.commit()

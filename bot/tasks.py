@@ -7,8 +7,10 @@ from db.database import SessionLocal
 import asyncio
 from entities.keyboards import Repeat_word_keyboard
 
-# Отправка уведомлений о повторениях слов
+
 async def send_repeat_notifications(users):
+    """Send duplicate word notifications"""
+
     tasks = []
     for user in users:
         tasks.append(send_message(
@@ -20,9 +22,10 @@ async def send_repeat_notifications(users):
 
     await asyncio.gather(*tasks)
 
-# Проверка слов на повторение
 @celery_app.task
 def Check_repetitions():
+    """Check words for duplicates"""
+    
     with SessionLocal() as db:
         now = datetime.now(timezone.utc)
         

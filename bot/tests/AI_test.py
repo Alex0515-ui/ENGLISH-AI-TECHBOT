@@ -5,8 +5,8 @@ from unittest.mock import Mock
 import json
 
 
-# Проверяю что промпт правильно составляется 
 def test_build_prompt(mocker, db):
+    """Verify correct prompt generation"""
 
     result = build_check_prompt("run", ["Я бегаю", "Он бежит"], "I run")
 
@@ -15,9 +15,9 @@ def test_build_prompt(mocker, db):
     assert "User answer:" in result
 
 
-# Проверяю на генерацию предложений от ИИ-шки
 @pytest.mark.asyncio
 async def test_generating_sentences(mocker):
+    """Test AI sentence generation"""
 
     mock_response = {
         "data": [
@@ -47,9 +47,9 @@ async def test_generating_sentences(mocker):
     assert result == mock_response["data"]
 
 
-# Проверка что проверка перевода есть
 @pytest.mark.asyncio
 async def test_check_translation(mocker):
+    """Check if translation verification exists"""
 
     mock_ai = mocker.patch(
         "AI.ai_practise.client.chat.completions.create", 

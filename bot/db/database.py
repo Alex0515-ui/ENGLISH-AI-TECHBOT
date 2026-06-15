@@ -4,7 +4,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from db.config import settings
 
 
-# Используем БД PostgreSQL
+# Using DB PostgreSQL
 engine = create_engine(settings.DB_URL)
 
 SessionLocal = sessionmaker(bind=engine, autoflush=False, autocommit=False)

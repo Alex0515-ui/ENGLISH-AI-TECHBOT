@@ -9,8 +9,10 @@ import time
 
 client = genai.Client(api_key=settings.GEMINI_API_KEY)
 
-# Запрос в Gemini API
+
 def get_words_from_ai(prompt: str):
+    """Gemini API JSON request and response"""
+
     max_attempts = 5
     for attempt in range(max_attempts):
         try:
@@ -35,8 +37,12 @@ def get_words_from_ai(prompt: str):
 
 
 
-# Функция для заполнения словаря в БД
+
 def fill_database():
+    """
+    AI function to fill DB dictionary
+    All prompts are inside the function
+    """
 
     db: Session = SessionLocal()
     TOPICS = [

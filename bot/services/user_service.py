@@ -8,16 +8,16 @@ from entities.keyboards import Main_menu_keyboard
 
 class UserService:
 
-    # Создание пользователя
+    
     @staticmethod  
     def create_user(db: Session, data: UserCreateSchema):
+        """Creates user in DB"""
+
         user = db.query(User).filter_by(telegram_id=data.telegram_id).first()
 
         if user:
-            print(f"Пользователь {user.telegram_id} найден в базе.")
             return user
         
-        print(f"Создаем нового пользователя {data.telegram_id}")
         user = User(
             username=data.username, 
             telegram_id=data.telegram_id,
@@ -28,29 +28,33 @@ class UserService:
         db.refresh(user)
         return user
     
-    # Выбор уровня
+
     @staticmethod 
     def select_level(db: Session, tg_id: int, level: str):
+        """Selects Eng level"""
+
         user = db.query(User).filter_by(telegram_id=tg_id).first()
-        print("Уровень установлен")
         if user:
             user.level = level
             db.commit()
             db.refresh(user)
 
-    # Выбор режима
+
     @staticmethod 
     def select_mode(db: Session, tg_id: int, mode: str):
+        """Selects Eng mode"""
+
         user = db.query(User).filter_by(telegram_id=tg_id).first()
-        print("Мод установлен")
         if user:
             user.mode = mode
             db.commit()
             db.refresh(user)
 
-    # Регистрация пользователя
+
     @staticmethod 
     async def complete_register(db: Session, tg_id: int):
+        """Registers user"""
+
         user = db.query(User).filter_by(telegram_id=tg_id).first()
         if user.is_registered == False:
             await send_message(
@@ -62,9 +66,10 @@ class UserService:
             user.is_registered = True
             db.commit()
     
-    # Получение ежедневных слов
     @staticmethod
     def get_daily_words(db: Session, tg_id: int, word_count: int):
+        """Gives daily words for user to learn"""
+
         user = db.query(User).filter_by(telegram_id=tg_id).first()
         if not user:
             return None

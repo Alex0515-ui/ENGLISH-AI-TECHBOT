@@ -9,8 +9,10 @@ import json
 from datetime import date
 from handlers.practise_handlers import handle_practise_answer
 
-# Функция проверки дневного лимита слов
+
 async def check_daily_limit_dialogue(tg_id: int):
+    """Checks dialogue daily limit"""
+
     daily = await get_daily_dialogue(tg_id=tg_id)
     today = str(date.today())
 
@@ -19,8 +21,10 @@ async def check_daily_limit_dialogue(tg_id: int):
         
     return False
 
-# Начала диалога с ИИ
+
 async def start_dialogue(tg_id: int):
+    """Starts dialogue with AI"""
+
     limit = await check_daily_limit_dialogue(tg_id=tg_id)
 
     if limit:
@@ -39,8 +43,9 @@ async def start_dialogue(tg_id: int):
     return await send_message(chat_id=tg_id, text="Hello! Write something and we can talk about it")
 
 
-# Обработчик текстовых команд и сообщениям для ИИ собеседника
 async def handle_message(user: User, text: str, db: Session):
+    """Message handler from user to AI assistant"""
+
     if text == "Главное меню":
         return await send_message(chat_id=user.telegram_id, text="Главное меню", reply_markup=Menu_keyboard)
     

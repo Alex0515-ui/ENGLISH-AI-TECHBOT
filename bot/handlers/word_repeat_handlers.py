@@ -8,8 +8,9 @@ from sqlalchemy import func
 from handlers.redis_handlers import *
 
 
-# Отправка слов на повторение
 async def send_word_repeat(tg_id: int, db: Session):
+    """Sends words to repeat them"""
+
     session = await get_repeat_session(tg_id=tg_id)
     if not session:
         return await send_message(chat_id=tg_id, text="Сессия закончилась")
@@ -54,8 +55,9 @@ async def send_word_repeat(tg_id: int, db: Session):
     )
     
 
-# Начало повторения слов
 async def start_repeat_session(tg_id: int, db: Session):
+    """Starting to words repeatition"""
+    
     words = WordService.get_words_to_repeat(db=db, tg_id=tg_id)
 
     session_data = {
