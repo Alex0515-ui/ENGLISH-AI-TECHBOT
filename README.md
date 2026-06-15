@@ -1,19 +1,20 @@
-# 🤖 ENGLISH-AI-TECHBOT — Telegram Bot for Learning English with AI
+# 🤖 TG_BOT — Telegram Bot for Learning English with AI
 
 A Python-based Telegram bot built as a personal tool for learning English — featuring AI-powered dialogue, a level system, and multiple learning modes. Runs via webhook and is deployed with Docker Compose.
 
 ---
 
-## 📋 Содержание
+## 📋 Table of Contents
 
-* [Описание](#описание)
-* [Технологии](#технологии)
-* [Структура проекта](#структура-проекта)
-* [Быстрый старт](#быстрый-старт)
-* [Команды управления](#команды-управления)
-* [Заполнение базы данных](#заполнение-базы-данных)
-* [Тестирование](#тестирование)
-* [Переменные окружения](#переменные-окружения)
+- [About](#about)
+- [Tech Stack](#tech-stack)
+- [Project Structure](#project-structure)
+- [Quick Start](#quick-start)
+- [Webhook Setup (ngrok)](#webhook-setup-ngrok)
+- [Management Commands](#management-commands)
+- [Seeding the Database](#seeding-the-database)
+- [Testing](#testing)
+- [Environment Variables](#environment-variables)
 
 ---
 
@@ -116,60 +117,6 @@ cp .env.example .env
 ```bash
 docker-compose up --build
 ```
-
----
-
-## 🌐 Настройка webhook (ngrok)
-
-Поскольку Telegram требует публичный HTTPS URL для webhook, при локальной разработке используется ngrok.
-
-### Требования
-
-* [ngrok](https://ngrok.com/download)
-* Аккаунт ngrok и authtoken
-
-### 1. Установить ngrok
-
-Скачайте и распакуйте ngrok.
-
-### 2. Получить authtoken
-
-* https://dashboard.ngrok.com/signup
-* https://dashboard.ngrok.com/get-started/your-authtoken
-
-### 3. Добавить токен
-
-```bash
-ngrok config add-authtoken YOUR_TOKEN_HERE
-```
-
-### 4. Запустить ngrok
-
-```bash
-ngrok http 8000
-```
-
-Вы получите URL вида: `https://xxxx.ngrok-free.app`
-
-### 5. Указать webhook
-
-Добавьте в `.env`:
-
-```env
-WEBHOOK_URL=https://xxxx.ngrok-free.app/webhook
-```
-
-Перезапустите проект:
-
-```bash
-docker-compose down
-docker-compose up
-```
-
-> ⚠️ **Важно:** URL меняется при каждом запуске — нужно обновлять `WEBHOOK_URL`. Используется только для разработки.
-
-> ❌ **Ошибка ERR_NGROK_4018** — не добавлен authtoken.
-> Решение: `ngrok config add-authtoken YOUR_TOKEN_HERE`
 
 ---
 
