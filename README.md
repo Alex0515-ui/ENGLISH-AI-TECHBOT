@@ -1,4 +1,4 @@
-# 🤖 TG_BOT — Telegram Bot for Learning English with AI
+# 🤖 ENGLISH-AI-TECHBOT — Telegram Bot for Learning English with AI
 
 A Python-based Telegram bot built as a personal tool for learning English — featuring AI-powered dialogue, a level system, and multiple learning modes. Runs via webhook and is deployed with Docker Compose.
 
